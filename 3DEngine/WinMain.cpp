@@ -1,9 +1,7 @@
-#include <Windows.h>
+#include "Libs.h"
+#include "MyException.h"
+#include "App.h"
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
-{
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
 
 
 int WINAPI wWinMain(
@@ -13,33 +11,13 @@ int WINAPI wWinMain(
     _In_ int nShowCmd
 )
 {
-	const wchar_t CLASS_NAME[] = L"This is a class name";
-	WNDCLASS wc = {};
-	wc.lpszClassName = CLASS_NAME;
-	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
+    try {
+        return App{}.Go();
+    }
+    catch (MyException e) {
+        MessageBoxA(nullptr, e.GetMessage().c_str(), "Error", MB_OK);
+    }
+   
+    
 
-	RegisterClass(&wc);
-
-	HWND hWnd = CreateWindowEx(
-		0, CLASS_NAME, L"A window", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		nullptr, nullptr, hInstance, nullptr
-	);
-	if (hWnd == NULL)
-	{
-		return 0;
-	}
-
-	ShowWindow(hWnd, nShowCmd);
-
-
-	MSG msg = { };
-	while (GetMessage(&msg, NULL, 0, 0) > 0)
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return 0;
 }
