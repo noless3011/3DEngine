@@ -4,11 +4,14 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include "MeshRenderer.h"
 
 
 class Graphics {
+	friend class MeshRenderer;
 public:
-	void Draw(float angle);
+	void DrawTest(float angle);
+	void Draw(MeshRenderer &meshRenderer);
 	void EndFrame();
 public:
 	Graphics(HWND hWnd, int width, int height);

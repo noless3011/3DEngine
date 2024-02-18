@@ -3,18 +3,19 @@
 
 namespace dx = DirectX;
 
-void Graphics::Draw(float angle)
+void Graphics::DrawTest(float angle)
 {
 	FLOAT color[3] = { 1, 0, 0 };
 	struct Vertex {
 		float x;
 		float y;
+		float z;
 	};
 	
 	Vertex vertices[3] = {
-		{0, 0.1},
-		{0.1, -0.1},
-		{-0.1, -0.1}
+		{0, 0.5, 1},
+		{0.5, -0.5, 1},
+		{-0.5, -0.5, 1}
 	};
 
 	struct ConstantBuffer {
@@ -105,6 +106,23 @@ void Graphics::Draw(float angle)
 	pContext->Draw(3, 0);
 }
 
+void Graphics::Draw(MeshRenderer &meshRenderer)
+{
+	meshRenderer.SetUpPipelinePtr(pDevice);
+	FLOAT color[3] = { 1, 0, 0 };
+	pContext->ClearRenderTargetView(pRTV.Get(), color);
+	pContext->IASetVertexBuffers(0, 1, meshRenderer.pVertexBuffer.GetAddressOf(), &meshRenderer.strides, &meshRenderer.offsets);
+	pContext->IASetPrimitiveTopology(meshRenderer.topology);
+	pContext->PSSetShader(meshRenderer.pPixelShader.Get(), nullptr, 0);
+	pContext->VSSetShader(meshRenderer.pVertexShader.Get(), 0, 0);
+	pContext->IASetInputLayout(meshRenderer.pInputLayout.Get());
+	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
+
+	
+	UINT vertexNumber = meshRenderer.mesh.vertexList.size();
+	pContext->Draw(vertexNumber, 0);
+}
+
 void Graphics::EndFrame()
 {
 	HRESULT hr = pSwapchain->Present(1, 0);
@@ -144,6 +162,15 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
 	pSwapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pResource);
 	pDevice->CreateRenderTargetView(pResource.Get(), nullptr, &pRTV);
+
+	D3D11_VIEWPORT viewport = {};
+	viewport.Width = 800;
+	viewport.Height = 600;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MaxDepth = 1;
+	viewport.MinDepth = 0;
+	pContext->RSSetViewports(1, &viewport);
 
 }
 

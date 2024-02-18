@@ -7,8 +7,8 @@ cbuffer cBuf
 };
 
 
-float4 main(float2 pos : Position) : SV_POSITION
+float4 main(float3 pos : Position) : SV_POSITION
 {
 	
-	return mul(float4(pos, 1, 1), rotate)  ;
+	return float4(pos, 1);
 }

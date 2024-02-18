@@ -63,3 +63,13 @@ HRESULT MyException::GetID()
 {
     return hr;
 }
+
+EngineException::EngineException() 
+{
+
+
+}
+
+EngineException::~EngineException()
+{
+}

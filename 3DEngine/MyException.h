@@ -4,7 +4,10 @@
 #include "Libs.h"
 
 
-
+class EngineException {
+	EngineException();
+	~EngineException();
+};
 
 class MyException : public std::exception{
 public:
