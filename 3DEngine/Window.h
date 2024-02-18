@@ -7,6 +7,7 @@ public:
 	Window(int width, int height, std::wstring windowName);
 	~Window();
 	Graphics& Gfx();
+	void ChangeWindowName(LPCWSTR string);
 	static std::optional<int> ProcessMessage();
 
 private:

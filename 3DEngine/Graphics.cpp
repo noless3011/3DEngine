@@ -1,11 +1,11 @@
 #include "Graphics.h"
 //#pragma comment(lib, "d3d11.lib")
 
+namespace dx = DirectX;
 
-
-void Graphics::Draw()
+void Graphics::Draw(float angle)
 {
-	FLOAT color[3] = { 0, 0, 0 };
+	FLOAT color[3] = { 1, 0, 0 };
 	struct Vertex {
 		float x;
 		float y;
@@ -16,6 +16,27 @@ void Graphics::Draw()
 		{0.1, -0.1},
 		{-0.1, -0.1}
 	};
+
+	struct ConstantBuffer {
+		dx::XMMATRIX matrix;
+	};
+	const ConstantBuffer rotate = {
+		dx::XMMatrixTranspose(dx::XMMatrixRotationZ(angle))
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+	D3D11_BUFFER_DESC cbd = {};
+	cbd.ByteWidth = sizeof(rotate);
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0;
+	cbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA scbd = {};
+	scbd.pSysMem = &rotate;
+	pDevice->CreateBuffer(&cbd, &scbd, &pConstantBuffer);
+	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
+
 
 	pContext->ClearRenderTargetView(pRTV.Get(), color);
 	
@@ -56,6 +77,8 @@ void Graphics::Draw()
 	pContext->VSSetShader(pVertexShader.Get(), 0, 0);
 
 	
+	
+
 
 	//Create and set the Input Layout
 	D3D11_INPUT_ELEMENT_DESC layout[] = {

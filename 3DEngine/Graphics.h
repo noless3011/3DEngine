@@ -3,11 +3,12 @@
 #include "MyException.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 
 class Graphics {
 public:
-	void Draw();
+	void Draw(float angle);
 	void EndFrame();
 public:
 	Graphics(HWND hWnd, int width, int height);

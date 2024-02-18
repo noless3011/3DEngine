@@ -1,6 +1,7 @@
 #pragma once
 #include "Libs.h"
 #include "Window.h"
+#include "Clock.h"
 
 
 class App {
@@ -10,4 +11,5 @@ public:
 	void Update();
 private:
 	Window wnd;
+	std::unique_ptr<Clock> clock;
 };

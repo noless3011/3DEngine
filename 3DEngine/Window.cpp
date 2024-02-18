@@ -54,6 +54,11 @@ Graphics& Window::Gfx()
 	return *pGfx;
 }
 
+void Window::ChangeWindowName(LPCWSTR string)
+{
+	SetWindowText(hWnd, string);
+}
+
 std::optional<int> Window::ProcessMessage()
 {
 	MSG msg = { };
@@ -61,17 +66,11 @@ std::optional<int> Window::ProcessMessage()
 	while (true)
 	{
 		hasMessage = PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE);
-		if (hasMessage) {
-			if (msg.message == WM_QUIT) {
-				return (int)msg.wParam;
-			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			
+		if (msg.message == WM_QUIT) {
+			return (int)msg.wParam;
 		}
-		else {
-			WaitMessage();
-		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 		
 	}
 	

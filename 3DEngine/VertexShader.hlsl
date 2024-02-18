@@ -1,4 +1,14 @@
+
+
+cbuffer cBuf
+{
+	matrix rotate;
+
+};
+
+
 float4 main(float2 pos : Position) : SV_POSITION
 {
-	return float4(pos.x, pos.y, 0, 1);
+	
+	return mul(float4(pos, 1, 1), rotate)  ;
 }
