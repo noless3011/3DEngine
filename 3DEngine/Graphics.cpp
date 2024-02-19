@@ -24,24 +24,35 @@ void Graphics::DrawTest(float angle)
 	const ConstantBuffer rotate = {
 		dx::XMMatrixTranspose(dx::XMMatrixRotationZ(angle))
 	};
+	const ConstantBuffer translate = {
+		dx::XMMatrixTranspose(dx::XMMatrixTranslation(sin(angle), 0, 0))
+	};
 
+	const ConstantBuffer bufferArray[] = {
+		rotate,
+		translate
+	};
+	
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+
 	D3D11_BUFFER_DESC cbd = {};
-	cbd.ByteWidth = sizeof(rotate);
+	cbd.ByteWidth = sizeof(bufferArray);
 	cbd.Usage = D3D11_USAGE_DYNAMIC;
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cbd.MiscFlags = 0;
-	cbd.StructureByteStride = 0;
+	cbd.StructureByteStride = sizeof(ConstantBuffer);
 	D3D11_SUBRESOURCE_DATA scbd = {};
-	scbd.pSysMem = &rotate;
-	pDevice->CreateBuffer(&cbd, &scbd, &pConstantBuffer);
+	scbd.pSysMem = &bufferArray;
+	CHECK_HRESULT(pDevice->CreateBuffer(&cbd, &scbd, &pConstantBuffer));
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
-
-
 	pContext->ClearRenderTargetView(pRTV.Get(), color);
 	
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
+	
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = sizeof(Vertex) * std::size(vertices);
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -63,7 +74,7 @@ void Graphics::DrawTest(float angle)
 	
 
 	//Set the pixel (fragment) shader
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
+
 	Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
 	CHECK_HRESULT(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
 	CHECK_HRESULT(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
@@ -71,7 +82,7 @@ void Graphics::DrawTest(float angle)
 
 
 	//Get the shader
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
+	
 	
 	CHECK_HRESULT(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
 	CHECK_HRESULT(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pVertexShader.GetAddressOf()));
@@ -86,7 +97,7 @@ void Graphics::DrawTest(float angle)
 		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0,
 		  D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
+	
 	CHECK_HRESULT(pDevice->CreateInputLayout(layout, 1, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.GetAddressOf()));
 	pContext->IASetInputLayout(pInputLayout.Get());
 
@@ -106,21 +117,24 @@ void Graphics::DrawTest(float angle)
 	pContext->Draw(3, 0);
 }
 
-void Graphics::Draw(MeshRenderer &meshRenderer)
+void Graphics::Draw(MeshRenderer meshRenderer)
 {
-	meshRenderer.SetUpPipelinePtr(pDevice);
+	pGlobalBuffers->SetUpPipelineBuffers(pDevice, pContext);
+	MeshRenderer copyMeshRenderer = meshRenderer;
+	copyMeshRenderer.SetUpPipelinePtr(pDevice);
 	FLOAT color[3] = { 1, 0, 0 };
 	pContext->ClearRenderTargetView(pRTV.Get(), color);
-	pContext->IASetVertexBuffers(0, 1, meshRenderer.pVertexBuffer.GetAddressOf(), &meshRenderer.strides, &meshRenderer.offsets);
-	pContext->IASetPrimitiveTopology(meshRenderer.topology);
-	pContext->PSSetShader(meshRenderer.pPixelShader.Get(), nullptr, 0);
-	pContext->VSSetShader(meshRenderer.pVertexShader.Get(), 0, 0);
-	pContext->IASetInputLayout(meshRenderer.pInputLayout.Get());
+	pContext->IASetVertexBuffers(0, 1, copyMeshRenderer.pVertexBuffer.GetAddressOf(), &copyMeshRenderer.strides, &copyMeshRenderer.offsets);
+	pContext->IASetPrimitiveTopology(copyMeshRenderer.topology);
+	pContext->PSSetShader(copyMeshRenderer.pPixelShader.Get(), nullptr, 0);
+	pContext->VSSetShader(copyMeshRenderer.pVertexShader.Get(), 0, 0);
+	pContext->IASetInputLayout(copyMeshRenderer.pInputLayout.Get());
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
-
 	
-	UINT vertexNumber = meshRenderer.mesh.vertexList.size();
+
+	UINT vertexNumber = copyMeshRenderer.pmesh->vertexList.size();
 	pContext->Draw(vertexNumber, 0);
+
 }
 
 void Graphics::EndFrame()
@@ -129,6 +143,11 @@ void Graphics::EndFrame()
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_HUNG) {
 		CHECK_HRESULT(pDevice->GetDeviceRemovedReason());
 	}
+}
+
+GlobalBuffers& Graphics::globalBuffers()
+{
+	return *pGlobalBuffers;
 }
 
 Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(height) {
@@ -161,7 +180,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	
 	Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
 	pSwapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pResource);
-	pDevice->CreateRenderTargetView(pResource.Get(), nullptr, &pRTV);
+	CHECK_HRESULT(pDevice->CreateRenderTargetView(pResource.Get(), nullptr, &pRTV));
 
 	D3D11_VIEWPORT viewport = {};
 	viewport.Width = 800;
@@ -171,7 +190,8 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	viewport.MaxDepth = 1;
 	viewport.MinDepth = 0;
 	pContext->RSSetViewports(1, &viewport);
-
+	pGlobalBuffers = std::make_unique<GlobalBuffers>();
+	pGlobalBuffers->SetUpPipelineBuffers(pDevice, pContext);
 }
 
 Graphics::~Graphics()

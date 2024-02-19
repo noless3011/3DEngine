@@ -1,10 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include "Libs.h"
-#include "MyException.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <DirectXMath.h>
+
 
 
 
@@ -12,9 +9,9 @@ class MeshRenderer {
 	friend class Graphics;
 public:
 	MeshRenderer();
-	MeshRenderer(Mesh _mesh);
+	MeshRenderer(Mesh &mesh);
 	~MeshRenderer();
-	Mesh mesh;
+	std::shared_ptr<Mesh> pmesh;
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 	UINT strides;

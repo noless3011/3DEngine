@@ -9,7 +9,6 @@ public:
 	Graphics& Gfx();
 	void ChangeWindowName(LPCWSTR string);
 	static std::optional<int> ProcessMessage();
-
 private:
 	class WindowClass {
 	public:

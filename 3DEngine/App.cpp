@@ -27,10 +27,11 @@ int App::Go() {
 		wnd.Gfx().EndFrame();
 
 	}
+	
 	return (int)msg.wParam;
 }
 
-
+Matrix rotate;
 Mesh mesh;
 MeshRenderer meshRenderer;
 void App::Start() {
@@ -45,13 +46,21 @@ void App::Start() {
 	};
 	mesh = Mesh(vertices, triangles);
 	meshRenderer = MeshRenderer(mesh);
+	
+	rotate = {
+		DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationZ(clock->Now()))
+	};
+	wnd.Gfx().globalBuffers().AddGlobalBuffer(rotate, "Rotate");
 }
 
 
 void App::Update() {
 	
 	wnd.ChangeWindowName(std::to_wstring(clock->Now()).c_str());
-	
-	
+	rotate = {
+		DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationZ(clock->Now()))
+	};
+	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(rotate, "Rotate");
+	//wnd.Gfx().DrawTest(clock->Now());
 	wnd.Gfx().Draw(meshRenderer);
 }

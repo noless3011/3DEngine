@@ -5,31 +5,35 @@
 
 MeshRenderer::MeshRenderer()
 {
-	mesh = Mesh();
+	pmesh = std::make_unique<Mesh>();
 
 }
 
-MeshRenderer::MeshRenderer(Mesh _mesh)
-{
-	mesh = _mesh;
 
+MeshRenderer::MeshRenderer(Mesh &mesh)
+{
+	pmesh = std::make_shared<Mesh>(mesh);
 }
 
 MeshRenderer::~MeshRenderer()
 {
+	/*pVertexBuffer->Release();
+	pPixelShader -> Release();
+	pVertexShader->Release();
+	pInputLayout->Release();*/
 }
 
 void MeshRenderer::SetUpPipelinePtr(Microsoft::WRL::ComPtr<ID3D11Device> &pDevice)
 {
 	D3D11_BUFFER_DESC bd = {};
-	bd.ByteWidth = sizeof(Vertex) * mesh.vertexList.size();
+	bd.ByteWidth = sizeof(Vertex) * pmesh->vertexList.size();
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 	bd.StructureByteStride = sizeof(Vertex);
 	D3D11_SUBRESOURCE_DATA subData = {};
-	Vertex* vertexArray = mesh.vertexList.data();
+	Vertex* vertexArray = pmesh->vertexList.data();
 
 	subData.pSysMem = vertexArray;
 	pDevice->CreateBuffer(&bd, &subData, &pVertexBuffer);

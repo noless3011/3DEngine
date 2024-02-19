@@ -54,6 +54,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="GlobalBuffers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libs.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="MeshRenderer.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalBuffers.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
