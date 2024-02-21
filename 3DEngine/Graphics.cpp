@@ -119,7 +119,7 @@ void Graphics::DrawTest(float angle)
 
 void Graphics::Draw(MeshRenderer meshRenderer)
 {
-	pGlobalBuffers->SetUpPipelineBuffers(pDevice, pContext);
+	pGlobalBuffers->UpdatePipelineBuffers();
 	MeshRenderer copyMeshRenderer = meshRenderer;
 	copyMeshRenderer.SetUpPipelinePtr(pDevice);
 	FLOAT color[3] = { 1, 0, 0 };
@@ -190,8 +190,8 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	viewport.MaxDepth = 1;
 	viewport.MinDepth = 0;
 	pContext->RSSetViewports(1, &viewport);
-	pGlobalBuffers = std::make_unique<GlobalBuffers>();
-	pGlobalBuffers->SetUpPipelineBuffers(pDevice, pContext);
+	pGlobalBuffers = std::make_unique<GlobalBuffers>(pDevice, pContext);
+	pGlobalBuffers->SetUpPipelineBuffers();
 }
 
 Graphics::~Graphics()

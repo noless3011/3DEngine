@@ -10,6 +10,7 @@
 
 class Graphics {
 	friend class MeshRenderer;
+	friend class GlobalBuffers;
 	friend class Window;
 public:
 	void DrawTest(float angle);

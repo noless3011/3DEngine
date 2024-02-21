@@ -13,15 +13,18 @@ struct Matrix {
 class GlobalBuffers {
 	friend class Graphics;
 public:
-	GlobalBuffers();
+	GlobalBuffers(Microsoft::WRL::ComPtr<ID3D11Device>& pDevice, Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pContext);
 	void ChangeGlobalBuffer(std::variant<Matrix, Vector, float, int> Data, std::string bufferName);
 	void AddGlobalBuffer(std::variant<Matrix, Vector, float, int> Data, std::string bufferName);
 	~GlobalBuffers();
 	GlobalBuffers(const GlobalBuffers&) = delete;
 	GlobalBuffers& operator = (const GlobalBuffers&) = delete;
 private:
-	void SetUpPipelineBuffers(Microsoft::WRL::ComPtr<ID3D11Device> &pDevice, Microsoft::WRL::ComPtr<ID3D11DeviceContext>& pContext);
-	void UpdatePipelineBuffers(Microsoft::WRL::ComPtr<ID3D11Device>& pDevice);
+	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
+
+	void SetUpPipelineBuffers();
+	void UpdatePipelineBuffers();
 	std::unordered_map<std::string, std::variant<Matrix, Vector, float, int>> Datas;
 	std::vector<Matrix> matrices;
 	std::vector<Vector> vectors;
