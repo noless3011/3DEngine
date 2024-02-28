@@ -1,4 +1,5 @@
 #include "Libs.h"
+
 #include "MyException.h"
 #include "App.h"
 
@@ -11,8 +12,9 @@ int WINAPI wWinMain(
     _In_ int nShowCmd
 )
 {
+    
     try {
-        return App{}.Go();
+        return App(800, 600).Go();
     }
     catch (MyException e) {
         MessageBoxA(nullptr, e.GetMessage().c_str(), "Error", MB_OK);

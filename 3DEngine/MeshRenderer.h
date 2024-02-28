@@ -8,11 +8,13 @@
 class MeshRenderer {
 	friend class Graphics;
 public:
+
 	MeshRenderer();
 	MeshRenderer(Mesh &mesh);
 	~MeshRenderer();
 	std::shared_ptr<Mesh> pmesh;
 private:
+	
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 	UINT strides;
 	UINT offsets;

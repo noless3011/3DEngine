@@ -5,13 +5,15 @@
 #include "Clock.h"
 
 
+
 class App {
 public:
 	App();
+	App(unsigned int x, unsigned int y);
 	int Go();
 	void Start();
 	void Update();
 private:
+	unsigned int width, height;
 	Window wnd;
-	std::unique_ptr<Clock> clock;
 };

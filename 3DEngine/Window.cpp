@@ -1,7 +1,7 @@
 #include "Window.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
-
+std::unique_ptr<InputHandler> Window::pInputHandler = std::make_unique<InputHandler>();
 
 HINSTANCE Window::WindowClass::GetInstance()
 {
@@ -43,6 +43,7 @@ Window::Window(int width, int height, std::wstring windowName)
 	
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	pGfx = std::make_unique<Graphics>(hWnd, width, height);
+	
 }
 
 Window::~Window()
@@ -52,6 +53,11 @@ Window::~Window()
 Graphics& Window::Gfx()
 {
 	return *pGfx;
+}
+
+InputHandler& Window::Input()
+{
+	return *pInputHandler;
 }
 
 void Window::ChangeWindowName(LPCWSTR string)
@@ -81,10 +87,24 @@ std::optional<int> Window::ProcessMessage()
 LRESULT Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
-	case WM_CLOSE:
+	case WM_CLOSE: {
 		PostQuitMessage(0);
 		return 0;
 	}
+	case WM_MOUSELEAVE:
+		pInputHandler->HandleMouseLeave();
+	case WM_MOUSEMOVE: {
+		pInputHandler->HandleMouse(lParam, wParam);
+	}
+	case WM_KEYDOWN: {
+		pInputHandler->HandleKeyboardDown(lParam, wParam);
+	}
+	case WM_KEYUP: {
+		pInputHandler->HandleKeyboardUp(lParam, wParam);
+	}
+
+	}
+	
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

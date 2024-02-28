@@ -122,14 +122,14 @@ void Graphics::Draw(MeshRenderer meshRenderer)
 	pGlobalBuffers->UpdatePipelineBuffers();
 	MeshRenderer copyMeshRenderer = meshRenderer;
 	copyMeshRenderer.SetUpPipelinePtr(pDevice);
-	FLOAT color[3] = { 1, 0, 0 };
-	pContext->ClearRenderTargetView(pRTV.Get(), color);
+	
+	
 	pContext->IASetVertexBuffers(0, 1, copyMeshRenderer.pVertexBuffer.GetAddressOf(), &copyMeshRenderer.strides, &copyMeshRenderer.offsets);
 	pContext->IASetPrimitiveTopology(copyMeshRenderer.topology);
 	pContext->PSSetShader(copyMeshRenderer.pPixelShader.Get(), nullptr, 0);
 	pContext->VSSetShader(copyMeshRenderer.pVertexShader.Get(), 0, 0);
 	pContext->IASetInputLayout(copyMeshRenderer.pInputLayout.Get());
-	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
+	pContext->OMSetRenderTargets(1u, pRTV.GetAddressOf(), pDSV.Get());
 	
 
 	UINT vertexNumber = copyMeshRenderer.pmesh->vertexList.size();
@@ -137,12 +137,20 @@ void Graphics::Draw(MeshRenderer meshRenderer)
 
 }
 
+void Graphics::StartFrame() {
+	FLOAT color[3] = { 0.1, 0.1, 0.1 };
+	pContext->ClearRenderTargetView(pRTV.Get(), color);
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void Graphics::EndFrame()
 {
+	
 	HRESULT hr = pSwapchain->Present(1, 0);
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_HUNG) {
 		CHECK_HRESULT(pDevice->GetDeviceRemovedReason());
 	}
+	;
 }
 
 GlobalBuffers& Graphics::globalBuffers()
@@ -192,6 +200,36 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	pContext->RSSetViewports(1, &viewport);
 	pGlobalBuffers = std::make_unique<GlobalBuffers>(pDevice, pContext);
 	pGlobalBuffers->SetUpPipelineBuffers();
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pSState;
+	D3D11_DEPTH_STENCIL_DESC SStateDesc = {};
+	SStateDesc.DepthEnable = true;
+	SStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	SStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+	pDevice->CreateDepthStencilState(&SStateDesc, &pSState);
+	pContext->OMSetDepthStencilState(pSState.Get(), 1u);
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pStencilTex;
+	D3D11_TEXTURE2D_DESC stencilTexDesc = {};
+	stencilTexDesc.Width = 800u;
+	stencilTexDesc.Height = 600u;
+	stencilTexDesc.MipLevels = 1u;
+	stencilTexDesc.ArraySize = 1u;
+	stencilTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	stencilTexDesc.SampleDesc.Count = 1u;
+	stencilTexDesc.SampleDesc.Quality = 0u;
+	stencilTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	stencilTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	pDevice->CreateTexture2D(&stencilTexDesc, nullptr, &pStencilTex);
+
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC stencilViewDesc = {};
+	stencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	stencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	stencilViewDesc.Texture2D.MipSlice = 0; 
+	pDevice->CreateDepthStencilView(pStencilTex.Get(), &stencilViewDesc, &pDSV);
+
+	
 }
 
 Graphics::~Graphics()

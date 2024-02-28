@@ -17,10 +17,6 @@ MeshRenderer::MeshRenderer(Mesh &mesh)
 
 MeshRenderer::~MeshRenderer()
 {
-	/*pVertexBuffer->Release();
-	pPixelShader -> Release();
-	pVertexShader->Release();
-	pInputLayout->Release();*/
 }
 
 void MeshRenderer::SetUpPipelinePtr(Microsoft::WRL::ComPtr<ID3D11Device> &pDevice)
@@ -55,9 +51,9 @@ void MeshRenderer::SetUpPipelinePtr(Microsoft::WRL::ComPtr<ID3D11Device> &pDevic
 
 
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-		  D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
-	CHECK_HRESULT(pDevice->CreateInputLayout(layout, 1, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.GetAddressOf()));
+	CHECK_HRESULT(pDevice->CreateInputLayout(layout, 2, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.GetAddressOf()));
 
 }

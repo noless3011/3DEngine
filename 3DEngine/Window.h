@@ -1,12 +1,14 @@
 #pragma once
 #include "Libs.h"
 #include "Graphics.h"
+#include "Input.h"
 
 class Window {
 public:
 	Window(int width, int height, std::wstring windowName);
 	~Window();
 	Graphics& Gfx();
+	InputHandler& Input();
 	void ChangeWindowName(LPCWSTR string);
 	static std::optional<int> ProcessMessage();
 private:
@@ -28,6 +30,7 @@ private:
 
 private:
 	std::unique_ptr<Graphics> pGfx;
+	static std::unique_ptr<InputHandler> pInputHandler;
 	HWND hWnd;
 	int width, height;
 };

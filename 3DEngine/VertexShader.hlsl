@@ -1,16 +1,33 @@
 
+struct VSOut 
+{
+    float4 pos : SV_Position;
+    float4 my_color : COLOR;
+    float4 normal : Normal;
+};
+
+struct VSIn
+{
+    float3 pos : Position;
+    float3 normal : normal;
+};
 
 
 cbuffer cMatrixBuf : register (b0){
 	matrix mymatrix;
 };
 cbuffer cVectorBuf : register (b1){
-	float4 scale;
+    float4 color1;
+    float4 scale;
+    
 };
 
 
-float4 main(float3 pos : Position) : SV_POSITION
+VSOut main(VSIn input)
 {
-	float x = 0.2;
-	return mul(float4(pos * scale.x, 1) ,mymatrix) ;
+    VSOut output;
+    output.pos = mul(float4(input.pos, 1), mymatrix);
+    output.my_color = float4(input.normal, 1);
+    output.normal = float4(input.normal, 1);
+	return output ;
 }

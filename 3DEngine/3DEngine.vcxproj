@@ -149,13 +149,16 @@
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GlobalBuffers.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClInclude Include="GlobalBuffers.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="MyException.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Graphics.h" />
+    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -167,6 +170,7 @@
     <ClInclude Include="Libs.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MyException.h" />
+    <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

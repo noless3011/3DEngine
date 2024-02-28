@@ -16,6 +16,7 @@ public:
 	void DrawTest(float angle);
 	void Draw(MeshRenderer meshRenderer);
 	void EndFrame();
+	void StartFrame();
 	GlobalBuffers& globalBuffers();
 public:
 	Graphics(HWND hWnd, int width, int height);
@@ -29,7 +30,7 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapchain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pRTV;
-
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV;
 
 	
 };
