@@ -22,12 +22,12 @@ public:
 	~GlobalBuffers();
 	GlobalBuffers(const GlobalBuffers&) = delete;
 	GlobalBuffers& operator = (const GlobalBuffers&) = delete;
+
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
-
-	void SetUpPipelineBuffers();
-	void UpdatePipelineBuffers();
+	virtual void SetUpPipelineBuffers() = 0;
+	virtual void UpdatePipelineBuffers() = 0;
 	std::unordered_map<std::string, std::variant<Matrix, Vector>> Datas;
 	std::vector<Matrix> matrices;
 	std::vector<Vector> vectors;
@@ -39,13 +39,25 @@ protected:
 
 
 class GlobalBuffersSystem : public GlobalBuffers {
-public:
+	friend class Graphics;
+protected:
 	GlobalBuffersSystem() = default;
+	UINT vector_slot_system = 1;
+	UINT matrix_slot_system = 0;
+	void SetUpPipelineBuffers() override;
+	void UpdatePipelineBuffers() override;
+public:
 	GlobalBuffersSystem(Microsoft::WRL::ComPtr<ID3D11Device>& _pDevice, Microsoft::WRL::ComPtr<ID3D11DeviceContext>& _pContext);
 };
 
 class GlobalBuffersUser : public GlobalBuffers {
-public:
+	friend class Graphics;
+protected:
 	GlobalBuffersUser() = default;
+	UINT vector_slot_user = 3;
+	UINT matrix_slot_user = 2;
+	void SetUpPipelineBuffers() override;
+	void UpdatePipelineBuffers() override;
+public:
 	GlobalBuffersUser(Microsoft::WRL::ComPtr<ID3D11Device>& _pDevice, Microsoft::WRL::ComPtr<ID3D11DeviceContext>& _pContext);
 };

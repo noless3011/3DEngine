@@ -38,12 +38,11 @@ int App::Go() {
 
 Matrix mymatrix;
 Vector scale;
-Vector color1;
 Mesh mesh;
 MeshRenderer meshRenderer;
 float currentVAngle = 0;
 float currentHAngle = 0;
-float currentDist = 0;
+float currentDist = 3;
 void App::Start() {
 	std::vector<Vector3> vertices = {
 		{0, 0, 0},
@@ -86,22 +85,10 @@ void App::Start() {
 
 	};
 
-	
-
-	/*mymatrix = {
-		DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationY(13.65) *
-			DirectX::XMMatrixRotationX(8.65) *
-			DirectX::XMMatrixTranslation(0, 0, 3) *
-			DirectX::XMMatrixPerspectiveFovLH(1.57f, 1.33f, 0.1, 1000)
-		)
-	};*/
 
 	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(mymatrix, "MyMatrix");
-	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(color1, "Color1");
-	//wnd.Gfx().globalBuffers().AddGlobalBuffer(color2, "Color2");
 
-	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(scale, "Scale");
+	wnd.Gfx().globalBuffers().AddGlobalBuffer(scale, "Scale");
 }
 
 
@@ -110,15 +97,26 @@ void App::Update() {
 	scale = {
 		DirectX::XMVectorSet(sin(Clock::GetClock().Now()), 1, 1, 1)
 	};
-	//if (wnd.Input().GetAxis(MouseX) > 0.1f || wnd.Input().GetAxis(MouseX) < -0.1f ){
-		currentVAngle += wnd.Input().GetAxis(MouseX) * Clock::deltaTime * 2;
-	//}
-	//if (wnd.Input().GetAxis(MouseY) > 0.1f || wnd.Input().GetAxis(MouseY) < -0.1f) {
-		currentHAngle += wnd.Input().GetAxis(MouseY) * Clock::deltaTime * 2;
-	//}
-	//if (wnd.Input().GetAxis(MouseX) > 0.1f || wnd.Input().GetAxis(MouseX) < -0.1f) {
-		currentDist += wnd.Input().GetAxis(MouseY) * Clock::deltaTime * 2;
-	//}
+	if (wnd.Input().IsKeyHold(A)) {
+		currentVAngle += 0.3 * Clock::deltaTime * 2;
+	}
+	if (wnd.Input().IsKeyHold(D)) {
+		currentVAngle -= 0.3 * Clock::deltaTime * 2;
+	}
+	if (wnd.Input().IsKeyHold(W)) {
+		currentHAngle += 0.3 * Clock::deltaTime * 2;
+	}
+	if (wnd.Input().IsKeyHold(S)) {
+		currentHAngle -= 0.3 * Clock::deltaTime * 2;
+	}
+	if (wnd.Input().IsKeyHold(Z)) {
+		currentDist += 0.3 * Clock::deltaTime * 2;
+	}
+	if (wnd.Input().IsKeyHold(X)) {
+		currentDist -= 0.3 * Clock::deltaTime * 2;
+	}
+	
+
 	std::wstringstream windowname;
 	windowname << std::to_wstring(wnd.Input().GetAxis(MouseX)) << L" ----- " << std::to_wstring(wnd.Input().GetAxis(MouseY));
 	wnd.ChangeWindowName(windowname.str().c_str());
@@ -126,33 +124,11 @@ void App::Update() {
 		DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixRotationY(currentVAngle) *
 			DirectX::XMMatrixRotationX(currentHAngle) *
-			DirectX::XMMatrixTranslation(0, 0, 2) *
+			DirectX::XMMatrixTranslation(0, 0, currentDist) *
 			DirectX::XMMatrixPerspectiveFovLH(1.57f, 1.33f, 0.1, 1000)
 		)
-	};
-	
-	
-	//wnd.Gfx().DrawTest(clock->Now());
-	color1 = {
-		DirectX::XMVectorSet(0.5, 0, 0.5, 1)
 	};
 	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(mymatrix, "MyMatrix");
-	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(scale, "Scale");
-	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(color1, "Color1");
-	wnd.Gfx().Draw(meshRenderer);
-	/*mymatrix = {
-		DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationY(0) *
-			DirectX::XMMatrixRotationX(8.65) *
-			DirectX::XMMatrixTranslation(0, 0, 3) *
-			DirectX::XMMatrixPerspectiveFovLH(1.57f, 1.33f, 0.1, 1000)
-		)
-	};
-	color1 = {
-		DirectX::XMVectorSet(0, 0.5, 0.5, 1)
-	};
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(mymatrix, "MyMatrix");
 	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(scale, "Scale");
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(color1, "Color1");
-	wnd.Gfx().Draw(meshRenderer);*/
+	wnd.Gfx().Draw(meshRenderer);
 }

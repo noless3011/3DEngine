@@ -93,14 +93,18 @@ LRESULT Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_MOUSELEAVE:
 		pInputHandler->HandleMouseLeave();
+		break;
 	case WM_MOUSEMOVE: {
 		pInputHandler->HandleMouse(lParam, wParam);
+		break;
 	}
 	case WM_KEYDOWN: {
 		pInputHandler->HandleKeyboardDown(lParam, wParam);
+		break;
 	}
 	case WM_KEYUP: {
 		pInputHandler->HandleKeyboardUp(lParam, wParam);
+		break;
 	}
 
 	}
