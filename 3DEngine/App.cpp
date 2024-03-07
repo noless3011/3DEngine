@@ -97,11 +97,11 @@ void App::Start() {
 		)
 	};*/
 
-	wnd.Gfx().globalBuffers().AddGlobalBuffer(mymatrix, "MyMatrix");
-	wnd.Gfx().globalBuffers().AddGlobalBuffer(color1, "Color1");
+	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(mymatrix, "MyMatrix");
+	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(color1, "Color1");
 	//wnd.Gfx().globalBuffers().AddGlobalBuffer(color2, "Color2");
 
-	wnd.Gfx().globalBuffers().AddGlobalBuffer(scale, "Scale");
+	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(scale, "Scale");
 }
 
 
@@ -136,9 +136,9 @@ void App::Update() {
 	color1 = {
 		DirectX::XMVectorSet(0.5, 0, 0.5, 1)
 	};
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(mymatrix, "MyMatrix");
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(scale, "Scale");
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(color1, "Color1");
+	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(mymatrix, "MyMatrix");
+	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(scale, "Scale");
+	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(color1, "Color1");
 	wnd.Gfx().Draw(meshRenderer);
 	/*mymatrix = {
 		DirectX::XMMatrixTranspose(

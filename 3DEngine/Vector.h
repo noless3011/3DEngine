@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cmath>
 // Vector2 class
 class Vector2 {
 public:

@@ -17,14 +17,16 @@ public:
 	void Draw(MeshRenderer meshRenderer);
 	void EndFrame();
 	void StartFrame();
-	GlobalBuffers& globalBuffers();
+	GlobalBuffersSystem& globalBuffersSystem();
+	GlobalBuffersUser& globalBuffers(); // this is for the user
 public:
 	Graphics(HWND hWnd, int width, int height);
 	~Graphics();
 	Graphics(const Graphics&) = delete;
 	Graphics& operator = (const Graphics&) = delete;
 private:
-	std::unique_ptr<GlobalBuffers> pGlobalBuffers;
+	std::unique_ptr<GlobalBuffersSystem> pGlobalBuffersSystem;
+	std::unique_ptr<GlobalBuffersUser> pGlobalBuffersUser;
 	int width{}, height{};
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapchain;

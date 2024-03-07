@@ -1,5 +1,20 @@
 #include "Camera.h"
 
+Camera::Camera()
+{
+}
+
+Camera::~Camera()
+{
+}
+
+Camera::Camera(Vector3 _position, Vector3 _direction, Vector3 _up)
+{
+    position = _position;
+    direction = _direction;
+    up = _up;
+}
+
 DirectX::XMMATRIX Camera::CreateViewMatrix()
 {
     DirectX::XMVECTOR pos = DirectX::XMVectorSet(position.x, position.y, position.z, 1);

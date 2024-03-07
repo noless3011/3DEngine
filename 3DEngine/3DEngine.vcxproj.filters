@@ -22,6 +22,9 @@
     <Filter Include="Header Files\Components">
       <UniqueIdentifier>{c740b201-3a1b-4518-8e0f-ede953e67e77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MathStuff">
+      <UniqueIdentifier>{df180642-34bf-4321-b5b6-8b3df0387fdf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -63,6 +66,12 @@
     <ClCompile Include="Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Quarternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libs.h">
@@ -98,8 +107,17 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Vector.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\MathStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Quarternion.h">
+      <Filter>Header Files\MathStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
