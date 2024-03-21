@@ -28,9 +28,11 @@ public:
 
 private:
 	void HandleMouseLeave();
+	void HandleMouseStop();
 	void HandleMouse(LPARAM lParam, WPARAM wParam);
 	void HandleKeyboardDown(LPARAM lParam, WPARAM wParam);
 	void HandleKeyboardUp(LPARAM lParam, WPARAM wParam);
+	
 	void CalculateMouseAxis();
 private:
 	std::vector<bool> keystates;

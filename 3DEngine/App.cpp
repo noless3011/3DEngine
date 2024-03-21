@@ -36,13 +36,9 @@ int App::Go() {
 	return (int)msg.wParam;
 }
 
-Matrix mymatrix;
-Vector scale;
 Mesh mesh;
 MeshRenderer meshRenderer;
-float currentVAngle = 0;
-float currentHAngle = 0;
-float currentDist = 3;
+float x, y, z;
 void App::Start() {
 	std::vector<Vector3> vertices = {
 		{0, 0, 0},
@@ -54,6 +50,7 @@ void App::Start() {
 		{1, 0, 1},
 		{0, 0, 1}
 	};
+
 
 	
 
@@ -74,61 +71,30 @@ void App::Start() {
 	mesh = Mesh(vertices, triangles);
 	meshRenderer = MeshRenderer(mesh);
 	
+
 	
-
-	mymatrix = {
-
-	};
-	
-	scale = {
-		DirectX::XMVectorSet(1, 1, 1, 1)
-
-	};
-
-
-	wnd.Gfx().globalBuffersSystem().AddGlobalBuffer(mymatrix, "MyMatrix");
-
-	wnd.Gfx().globalBuffers().AddGlobalBuffer(scale, "Scale");
 }
 
 
 void App::Update() {
 	
-	scale = {
-		DirectX::XMVectorSet(sin(Clock::GetClock().Now()), 1, 1, 1)
-	};
 	if (wnd.Input().IsKeyHold(A)) {
-		currentVAngle += 0.3 * Clock::deltaTime * 2;
+		x += 0.3 * Clock::deltaTime * 2;
 	}
 	if (wnd.Input().IsKeyHold(D)) {
-		currentVAngle -= 0.3 * Clock::deltaTime * 2;
+		x -= 0.3 * Clock::deltaTime * 2;
 	}
 	if (wnd.Input().IsKeyHold(W)) {
-		currentHAngle += 0.3 * Clock::deltaTime * 2;
+		z += 0.3 * Clock::deltaTime * 2;
 	}
 	if (wnd.Input().IsKeyHold(S)) {
-		currentHAngle -= 0.3 * Clock::deltaTime * 2;
+		z -= 0.3 * Clock::deltaTime * 2;
 	}
 	if (wnd.Input().IsKeyHold(Z)) {
-		currentDist += 0.3 * Clock::deltaTime * 2;
+		y += 0.3 * Clock::deltaTime * 2;
 	}
 	if (wnd.Input().IsKeyHold(X)) {
-		currentDist -= 0.3 * Clock::deltaTime * 2;
+		y -= 0.3 * Clock::deltaTime * 2;
 	}
 	
-
-	std::wstringstream windowname;
-	windowname << std::to_wstring(wnd.Input().GetAxis(MouseX)) << L" ----- " << std::to_wstring(wnd.Input().GetAxis(MouseY));
-	wnd.ChangeWindowName(windowname.str().c_str());
-	mymatrix = {
-		DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationY(currentVAngle) *
-			DirectX::XMMatrixRotationX(currentHAngle) *
-			DirectX::XMMatrixTranslation(0, 0, currentDist) *
-			DirectX::XMMatrixPerspectiveFovLH(1.57f, 1.33f, 0.1, 1000)
-		)
-	};
-	wnd.Gfx().globalBuffersSystem().ChangeGlobalBuffer(mymatrix, "MyMatrix");
-	wnd.Gfx().globalBuffers().ChangeGlobalBuffer(scale, "Scale");
-	wnd.Gfx().Draw(meshRenderer);
 }

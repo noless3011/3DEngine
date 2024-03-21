@@ -93,6 +93,19 @@ void InputHandler::HandleMouseLeave()
 	mouseAxisY = 0;
 }
 
+void InputHandler::HandleMouseStop()
+{	
+	constexpr float sense = 0.00001f;
+	float d = mouseX - premouseX;
+	if (d < sense && d > -sense) {
+		mouseAxisX = 0;
+	}
+	d = mouseY - premouseY;
+	if (d < sense && d > -sense) {
+		mouseAxisY = 0;
+	}
+}
+
 void InputHandler::HandleMouse(LPARAM lParam, WPARAM wParam)
 {
 	previous_time = current_time;
@@ -127,7 +140,7 @@ void InputHandler::HandleKeyboardUp(LPARAM lParam, WPARAM wParam)
 void InputHandler::CalculateMouseAxis()
 {
 	float d = mouseX - premouseX;
-	if (d > 0.001f || d < -0.001f) {
+	/*if (d > 0.001f || d < -0.001f) {
 		mouseAxisX = (mouseX - premouseX) / deltaTime;
 	}
 	else {
@@ -139,6 +152,7 @@ void InputHandler::CalculateMouseAxis()
 	}
 	else {
 		mouseAxisY = 0;
-	}
-	
+	}*/
+	mouseAxisX = (mouseX - premouseX) / deltaTime;
+	mouseAxisY = (mouseY - premouseY) / deltaTime;
 }

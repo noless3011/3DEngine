@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include "Material.h"
 #include "Libs.h"
 
 
@@ -13,6 +14,7 @@ public:
 	MeshRenderer(Mesh &mesh);
 	~MeshRenderer();
 	std::shared_ptr<Mesh> pmesh;
+	std::shared_ptr<Material> pmat;
 private:
 	
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;

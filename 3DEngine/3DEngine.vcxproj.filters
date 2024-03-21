@@ -72,6 +72,9 @@
     <ClCompile Include="Quarternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OutputWindowMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Libs.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="Quarternion.h">
       <Filter>Header Files\MathStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAssimp.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

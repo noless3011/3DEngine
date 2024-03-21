@@ -119,8 +119,7 @@ void Graphics::DrawTest(float angle)
 
 void Graphics::Draw(MeshRenderer meshRenderer)
 {
-	pGlobalBuffersSystem->UpdatePipelineBuffers();
-	pGlobalBuffersUser->UpdatePipelineBuffers();
+	
 	MeshRenderer copyMeshRenderer = meshRenderer;
 	copyMeshRenderer.SetUpPipelinePtr(pDevice);
 	
@@ -154,15 +153,7 @@ void Graphics::EndFrame()
 	;
 }
 
-GlobalBuffersSystem& Graphics::globalBuffersSystem()
-{
-	return *pGlobalBuffersSystem;
-}
 
-GlobalBuffersUser& Graphics::globalBuffers()
-{
-	return *pGlobalBuffersUser;
-}
 
 Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(height) {
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -204,10 +195,6 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	viewport.MaxDepth = 1;
 	viewport.MinDepth = 0;
 	pContext->RSSetViewports(1, &viewport);
-	pGlobalBuffersSystem = std::make_unique<GlobalBuffersSystem>(pDevice, pContext);
-	pGlobalBuffersSystem->SetUpPipelineBuffers();
-	pGlobalBuffersUser = std::make_unique<GlobalBuffersUser>(pDevice, pContext);
-	pGlobalBuffersUser->SetUpPipelineBuffers();
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pSState;
 	D3D11_DEPTH_STENCIL_DESC SStateDesc = {};
 	SStateDesc.DepthEnable = true;

@@ -106,8 +106,9 @@ LRESULT Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		pInputHandler->HandleKeyboardUp(lParam, wParam);
 		break;
 	}
-
 	}
+	pInputHandler->HandleMouseStop();
+
 	
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);

@@ -2,8 +2,7 @@
 struct VSOut 
 {
     float4 pos : SV_Position;
-    float4 my_color : COLOR;
-    float4 normal : Normal;
+    float4 normal : NORMAL;
 };
 
 struct VSIn
@@ -31,8 +30,7 @@ cbuffer cVectorBufUser : register(b3){
 VSOut main(VSIn input)
 {
     VSOut output;
-    output.pos = mul(float4(input.pos * scale.x, 1), mymatrix);
-    output.my_color = float4(input.normal, 1);
+    output.pos = mul(float4(input.pos, 1), mymatrix);
     output.normal = float4(input.normal, 1);
 	return output ;
 }
