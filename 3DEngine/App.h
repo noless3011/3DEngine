@@ -1,10 +1,7 @@
 #pragma once
-#include "Libs.h"
 #include "Window.h"
 #include "Graphics.h"
 #include "Clock.h"
-
-
 
 class App {
 public:

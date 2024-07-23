@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Graphics.h"
 //#pragma comment(lib, "d3d11.lib")
 
@@ -11,7 +12,7 @@ void Graphics::DrawTest(float angle)
 		float y;
 		float z;
 	};
-	
+
 	Vertex vertices[3] = {
 		{0, 0.5, 1},
 		{0.5, -0.5, 1},
@@ -32,7 +33,7 @@ void Graphics::DrawTest(float angle)
 		rotate,
 		translate
 	};
-	
+
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
@@ -51,8 +52,7 @@ void Graphics::DrawTest(float angle)
 	CHECK_HRESULT(pDevice->CreateBuffer(&cbd, &scbd, &pConstantBuffer));
 	pContext->VSSetConstantBuffers(0, 1, pConstantBuffer.GetAddressOf());
 	pContext->ClearRenderTargetView(pRTV.Get(), color);
-	
-	
+
 	D3D11_BUFFER_DESC bd = {};
 	bd.ByteWidth = sizeof(Vertex) * std::size(vertices);
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -70,8 +70,6 @@ void Graphics::DrawTest(float angle)
 	//Select the primitive topology for the pipeline
 	D3D11_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	pContext->IASetPrimitiveTopology(topology);
-	
-	
 
 	//Set the pixel (fragment) shader
 
@@ -80,27 +78,20 @@ void Graphics::DrawTest(float angle)
 	CHECK_HRESULT(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
 
-
 	//Get the shader
-	
-	
+
 	CHECK_HRESULT(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
 	CHECK_HRESULT(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pVertexShader.GetAddressOf()));
 	pContext->VSSetShader(pVertexShader.Get(), 0, 0);
-
-	
-	
-
 
 	//Create and set the Input Layout
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0,
 		  D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
-	
+
 	CHECK_HRESULT(pDevice->CreateInputLayout(layout, 1, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.GetAddressOf()));
 	pContext->IASetInputLayout(pInputLayout.Get());
-
 
 	//set the render target view and viewport
 	pContext->OMSetRenderTargets(1, pRTV.GetAddressOf(), nullptr);
@@ -119,22 +110,18 @@ void Graphics::DrawTest(float angle)
 
 void Graphics::Draw(MeshRenderer meshRenderer)
 {
-	
 	MeshRenderer copyMeshRenderer = meshRenderer;
 	copyMeshRenderer.SetUpPipelinePtr(pDevice);
-	
-	
+
 	pContext->IASetVertexBuffers(0, 1, copyMeshRenderer.pVertexBuffer.GetAddressOf(), &copyMeshRenderer.strides, &copyMeshRenderer.offsets);
 	pContext->IASetPrimitiveTopology(copyMeshRenderer.topology);
 	pContext->PSSetShader(copyMeshRenderer.pPixelShader.Get(), nullptr, 0);
 	pContext->VSSetShader(copyMeshRenderer.pVertexShader.Get(), 0, 0);
 	pContext->IASetInputLayout(copyMeshRenderer.pInputLayout.Get());
 	pContext->OMSetRenderTargets(1u, pRTV.GetAddressOf(), pDSV.Get());
-	
 
 	UINT vertexNumber = copyMeshRenderer.pmesh->vertexList.size();
 	pContext->Draw(vertexNumber, 0);
-
 }
 
 void Graphics::StartFrame() {
@@ -145,15 +132,12 @@ void Graphics::StartFrame() {
 
 void Graphics::EndFrame()
 {
-	
 	HRESULT hr = pSwapchain->Present(1, 0);
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_HUNG) {
 		CHECK_HRESULT(pDevice->GetDeviceRemovedReason());
 	}
 	;
 }
-
-
 
 Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(height) {
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -181,8 +165,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 		nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, creationFlags, nullptr, 0, D3D11_SDK_VERSION,
 		&sd, &pSwapchain, &pDevice, nullptr, &pContext
 	));
-	
-	
+
 	Microsoft::WRL::ComPtr<ID3D11Resource> pResource = nullptr;
 	pSwapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pResource);
 	CHECK_HRESULT(pDevice->CreateRenderTargetView(pResource.Get(), nullptr, &pRTV));
@@ -217,14 +200,11 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 	stencilTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	pDevice->CreateTexture2D(&stencilTexDesc, nullptr, &pStencilTex);
 
-
 	D3D11_DEPTH_STENCIL_VIEW_DESC stencilViewDesc = {};
 	stencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	stencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	stencilViewDesc.Texture2D.MipSlice = 0; 
+	stencilViewDesc.Texture2D.MipSlice = 0;
 	pDevice->CreateDepthStencilView(pStencilTex.Get(), &stencilViewDesc, &pDSV);
-
-	
 }
 
 Graphics::~Graphics()

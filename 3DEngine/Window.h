@@ -1,5 +1,5 @@
 #pragma once
-#include "Libs.h"
+#include <Windows.h>
 #include "Graphics.h"
 #include "Input.h"
 

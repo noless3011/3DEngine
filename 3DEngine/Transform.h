@@ -2,7 +2,6 @@
 #include "Vector.h"
 #include "Quarternion.h"
 
-
 class Transform {
 public:
 	Vector3 position;
@@ -19,5 +18,4 @@ public:
 	void RotateAround(Vector3 axis, float angle);
 	void ScaleTo(Vector3 new_scale);
 private:
-
 };

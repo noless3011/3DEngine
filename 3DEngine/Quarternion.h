@@ -3,7 +3,6 @@
 #include "Clock.h"
 #define M_PI 3.14159265358979323846
 
-
 class Quarternion {
 public:
 	float s;
@@ -16,8 +15,8 @@ public:
 	Quarternion(float _s, Vector3 _axis) : s(_s), axis(_axis) {}
 
 	//parameterize constructor
-	Quarternion(float _s, float _x,float _y, float _z) {}
-	
+	Quarternion(float _s, float _x, float _y, float _z) {}
+
 	//copy constructor
 	Quarternion(const Quarternion& other) : s(other.s), axis(other.axis) {}
 

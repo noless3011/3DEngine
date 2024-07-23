@@ -1,15 +1,11 @@
 #pragma once
-#include <comdef.h>
-#include <exception>
-#include "Libs.h"
-
 
 class EngineException {
 	EngineException();
 	~EngineException();
 };
 
-class MyException : public std::exception{
+class MyException : public std::exception {
 public:
 	MyException(HRESULT Hresult, const char* file, int line);
 	~MyException();

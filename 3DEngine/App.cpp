@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "App.h"
-
-
 
 App::App(unsigned int _x, unsigned int _y) : wnd(_x, _y, L"My window") {
 	width = _x;
@@ -12,11 +11,10 @@ App::App() : wnd(800, 600, L"My window") {
 	width = 800;
 }
 
-
 int App::Go() {
 	MSG msg = { };
 	bool hasMessage = true;
-	
+
 	Start();
 	while (true)
 	{
@@ -30,9 +28,8 @@ int App::Go() {
 		wnd.Gfx().StartFrame();
 		Update();
 		wnd.Gfx().EndFrame();
-
 	}
-	
+
 	return (int)msg.wParam;
 }
 
@@ -51,9 +48,6 @@ void App::Start() {
 		{0, 0, 1}
 	};
 
-
-	
-
 	std::vector<int> triangles = {
 		0, 1, 2, //face front
 		0, 2, 3,
@@ -70,14 +64,9 @@ void App::Start() {
 	};
 	mesh = Mesh(vertices, triangles);
 	meshRenderer = MeshRenderer(mesh);
-	
-
-	
 }
 
-
 void App::Update() {
-	
 	if (wnd.Input().IsKeyHold(A)) {
 		x += 0.3 * Clock::deltaTime * 2;
 	}
@@ -96,5 +85,4 @@ void App::Update() {
 	if (wnd.Input().IsKeyHold(X)) {
 		y -= 0.3 * Clock::deltaTime * 2;
 	}
-	
 }

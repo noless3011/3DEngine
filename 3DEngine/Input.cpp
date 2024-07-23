@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Input.h"
 
 const std::unordered_map<int, KEYCODE> InputHandler::keymap = {
@@ -27,9 +28,7 @@ const std::unordered_map<int, KEYCODE> InputHandler::keymap = {
 	{0x58, X},
 	{0x59, Y},
 	{0x5A, Z}
-
 };
-
 
 InputHandler::InputHandler()
 {
@@ -48,7 +47,6 @@ InputHandler::~InputHandler()
 {
 }
 
-
 float InputHandler::GetMouseX()
 {
 	return mouseX;
@@ -64,7 +62,7 @@ float InputHandler::GetAxis(AXIS axis)
 	switch (axis)
 	{
 	case MouseX:
-		
+
 		return mouseAxisX;
 		break;
 	case MouseY:
@@ -85,8 +83,6 @@ bool InputHandler::IsKeyHold(KEYCODE keycode)
 	return keystates[keycode];
 }
 
-
-
 void InputHandler::HandleMouseLeave()
 {
 	mouseAxisX = 0;
@@ -94,7 +90,7 @@ void InputHandler::HandleMouseLeave()
 }
 
 void InputHandler::HandleMouseStop()
-{	
+{
 	constexpr float sense = 0.00001f;
 	float d = mouseX - premouseX;
 	if (d < sense && d > -sense) {
@@ -113,7 +109,6 @@ void InputHandler::HandleMouse(LPARAM lParam, WPARAM wParam)
 	deltaTime = current_time - previous_time;
 
 	CalculateMouseAxis();
-
 
 	mousePoint = MAKEPOINTS(lParam);
 	premouseX = mouseX;
@@ -134,7 +129,6 @@ void InputHandler::HandleKeyboardUp(LPARAM lParam, WPARAM wParam)
 	if (keymap.contains(wParam)) {
 		keystates[keymap.at(wParam)] = false;
 	}
-	
 }
 
 void InputHandler::CalculateMouseAxis()

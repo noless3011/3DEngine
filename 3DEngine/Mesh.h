@@ -16,7 +16,7 @@ public:
 	~Mesh();
 	std::vector<Vector3> vertices; // should be privated
 	std::vector<int> triangles;   // should be privated
-	
+
 	std::vector<Vector3> normalsVertex;// should be privated
 	std::vector<Vector3> normalsFace;// should be privated
 

@@ -1,9 +1,4 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <variant>
-#include <memory>
-#include <typeinfo>
 #include "Component.h"
 #include "MyException.h"
 
@@ -15,9 +10,9 @@ public:
 
 public:
 	std::string name;
-	
+
 	std::vector<std::string> tags;//will create a Tag class in the future
-	
+
 public:
 	template <typename T>
 	std::shared_ptr<T> GetComponent();

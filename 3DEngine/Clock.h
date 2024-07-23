@@ -1,5 +1,4 @@
 #pragma once
-#include <chrono>
 
 class Clock {
 	friend class App;

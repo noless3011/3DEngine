@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Libs.h"
 #include "Clock.h"
 
 enum KEYCODE {
-	Q,W,E,R,T,Y,U,I,O,P,A,S,D,F,G,H,J,K,L,Z,X,C,V,B,N,M
+	Q, W, E, R, T, Y, U, I, O, P, A, S, D, F, G, H, J, K, L, Z, X, C, V, B, N, M
 };
-
 
 enum AXIS {
 	MouseX, MouseY
@@ -32,7 +30,7 @@ private:
 	void HandleMouse(LPARAM lParam, WPARAM wParam);
 	void HandleKeyboardDown(LPARAM lParam, WPARAM wParam);
 	void HandleKeyboardUp(LPARAM lParam, WPARAM wParam);
-	
+
 	void CalculateMouseAxis();
 private:
 	std::vector<bool> keystates;

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Window.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
@@ -13,11 +14,8 @@ const wchar_t* Window::WindowClass::GetWindowClassName()
 	return wndClass.className;
 }
 
-
-
 Window::WindowClass::WindowClass() : hInstance(GetModuleHandle(nullptr))
 {
-	
 	WNDCLASS wc = {};
 	wc.lpszClassName = className;
 	wc.lpfnWndProc = WindowProc;
@@ -40,10 +38,9 @@ Window::Window(int width, int height, std::wstring windowName)
 		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
 		nullptr, nullptr, WindowClass::GetInstance(), nullptr
 	);
-	
+
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	pGfx = std::make_unique<Graphics>(hWnd, width, height);
-	
 }
 
 Window::~Window()
@@ -77,9 +74,7 @@ std::optional<int> Window::ProcessMessage()
 		}
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-		
 	}
-	
 
 	return {};
 }
@@ -108,8 +103,6 @@ LRESULT Window::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	}
 	pInputHandler->HandleMouseStop();
-
-	
 
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

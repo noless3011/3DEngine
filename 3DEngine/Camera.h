@@ -1,9 +1,8 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include "Vector.h"
 #include "Transform.h"
-
-
 
 class Camera {
 	friend class GlobalBuffer;

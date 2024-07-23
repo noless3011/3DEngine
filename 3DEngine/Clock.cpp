@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Clock.h"
 
 std::chrono::time_point<std::chrono::high_resolution_clock> Clock::start = std::chrono::high_resolution_clock::now();
@@ -8,13 +9,11 @@ Clock::Clock()
 {
 	pre = 0;
 	cur = 0;
-
 }
 
 Clock::~Clock()
 {
 }
-
 
 Clock& Clock::GetClock()
 {
