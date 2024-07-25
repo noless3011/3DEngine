@@ -11,7 +11,7 @@ int WINAPI wWinMain(
 )
 {
 	try {
-		return App(800, 600).Go();
+		return App::GetInstance(800, 640).Go();
 	}
 	catch (MyException e) {
 		MessageBoxA(nullptr, e.GetMessage().c_str(), "Error", MB_OK);

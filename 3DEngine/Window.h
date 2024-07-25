@@ -1,6 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include "Graphics.h"
+#include "Event.h"
+#include "EventDispatcher.h"
+#include "EventListener.h"
 #include "Input.h"
 
 class Window {
@@ -11,6 +14,8 @@ public:
 	InputHandler& Input();
 	void ChangeWindowName(LPCWSTR string);
 	static std::optional<int> ProcessMessage();
+	template<typename T>
+	void AddListener(std::unique_ptr<EventListener<T>>& listener);
 private:
 	class WindowClass {
 	public:
@@ -31,6 +36,13 @@ private:
 private:
 	std::unique_ptr<Graphics> pGfx;
 	static std::unique_ptr<InputHandler> pInputHandler;
+	static std::shared_ptr<EventDispatcher> eventDispatcher;
 	HWND hWnd;
 	int width, height;
 };
+
+template<typename T>
+inline void Window::AddListener(std::unique_ptr<EventListener<T>>& listener)
+{
+	eventDispatcher->AddEventListener(std::move(listener));
+}

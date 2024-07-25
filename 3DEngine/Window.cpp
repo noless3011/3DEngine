@@ -2,7 +2,9 @@
 #include "Window.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
-std::unique_ptr<InputHandler> Window::pInputHandler = std::make_unique<InputHandler>();
+
+std::shared_ptr<EventDispatcher> Window::eventDispatcher = std::make_shared<EventDispatcher>();
+std::unique_ptr<InputHandler> Window::pInputHandler = std::make_unique<InputHandler>(Window::eventDispatcher);
 
 HINSTANCE Window::WindowClass::GetInstance()
 {

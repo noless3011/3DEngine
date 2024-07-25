@@ -1,14 +1,17 @@
 #include "stdafx.h"
 #include "App.h"
+#include "Entity.h"
 
-App::App(unsigned int _x, unsigned int _y) : wnd(_x, _y, L"My window") {
+App::App(unsigned int _x, unsigned int _y) {
 	width = _x;
 	height = _y;
+	pWnd = std::make_shared<Window>(width, height, L"My fps game");
 }
 
-App::App() : wnd(800, 600, L"My window") {
+App::App() {
 	height = 600;
 	width = 800;
+	pWnd = std::make_shared<Window>(width, height, L"My fps game");
 }
 
 int App::Go() {
@@ -25,9 +28,9 @@ int App::Go() {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 		Clock::CalculateDeltaTime();
-		wnd.Gfx().StartFrame();
+		pWnd->Gfx().StartFrame();
 		Update();
-		wnd.Gfx().EndFrame();
+		pWnd->Gfx().EndFrame();
 	}
 
 	return (int)msg.wParam;
@@ -36,7 +39,18 @@ int App::Go() {
 Mesh mesh;
 MeshRenderer meshRenderer;
 float x, y, z;
+Entity entity;
 void App::Start() {
+	Entity* pEntity = &entity;
+	EventAction<MouseEvent> action = [pEntity](MouseEvent e) {
+		pEntity->x += e.x;
+		pEntity->y += e.y;
+		std::wstring x = std::to_wstring(pEntity->x);
+		std::wstring y = std::to_wstring(pEntity->y);
+		App::GetInstance().getWindow()->ChangeWindowName((x + L" - " + y).c_str());
+		return true;
+	};
+	entity.addEventListener<MouseEvent>(action);
 	std::vector<Vector3> vertices = {
 		{0, 0, 0},
 		{1, 0, 0},
@@ -67,22 +81,27 @@ void App::Start() {
 }
 
 void App::Update() {
-	if (wnd.Input().IsKeyHold(A)) {
+	if (pWnd->Input().IsKeyHold(A)) {
 		x += 0.3 * Clock::deltaTime * 2;
 	}
-	if (wnd.Input().IsKeyHold(D)) {
+	if (pWnd->Input().IsKeyHold(D)) {
 		x -= 0.3 * Clock::deltaTime * 2;
 	}
-	if (wnd.Input().IsKeyHold(W)) {
+	if (pWnd->Input().IsKeyHold(W)) {
 		z += 0.3 * Clock::deltaTime * 2;
 	}
-	if (wnd.Input().IsKeyHold(S)) {
+	if (pWnd->Input().IsKeyHold(S)) {
 		z -= 0.3 * Clock::deltaTime * 2;
 	}
-	if (wnd.Input().IsKeyHold(Z)) {
+	if (pWnd->Input().IsKeyHold(Z)) {
 		y += 0.3 * Clock::deltaTime * 2;
 	}
-	if (wnd.Input().IsKeyHold(X)) {
+	if (pWnd->Input().IsKeyHold(X)) {
 		y -= 0.3 * Clock::deltaTime * 2;
 	}
+}
+
+std::shared_ptr<Window> App::getWindow()
+{
+	return pWnd;
 }

@@ -30,7 +30,7 @@ const std::unordered_map<int, KEYCODE> InputHandler::keymap = {
 	{0x5A, Z}
 };
 
-InputHandler::InputHandler()
+InputHandler::InputHandler(std::shared_ptr<EventDispatcher> dispatcher) : dispatcher(dispatcher)
 {
 	keystates = std::vector<bool>(26, false);
 	mouseX = 0;
@@ -115,12 +115,17 @@ void InputHandler::HandleMouse(LPARAM lParam, WPARAM wParam)
 	premouseY = mouseY;
 	mouseX = mousePoint.x / static_cast<float>(800);
 	mouseY = mousePoint.y / static_cast<float>(600);
+	MouseEvent e(mousePoint.x, mousePoint.y);
+	dispatcher->DispatchEvent(&e);
 }
 
 void InputHandler::HandleKeyboardDown(LPARAM lParam, WPARAM wParam)
 {
 	if (keymap.contains(wParam)) {
 		keystates[keymap.at(wParam)] = true;
+		KEYCODE k_temp = keymap.at(wParam);
+		KeyEvent e(keymap.at(wParam));
+		dispatcher->DispatchEvent(&e);
 	}
 }
 

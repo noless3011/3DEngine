@@ -5,12 +5,22 @@
 
 class App {
 public:
-	App();
-	App(unsigned int x, unsigned int y);
+	static App& GetInstance(unsigned int x = 0, unsigned int y = 0) {
+		static App instance(x, y);
+		return instance;
+	}
+
+	App(const App&) = delete;
+	App& operator=(const App&) = delete;
+
 	int Go();
 	void Start();
 	void Update();
+	std::shared_ptr<Window> getWindow();
 private:
+	App();
+	App(unsigned int x, unsigned int y);
+
 	unsigned int width, height;
-	Window wnd;
+	std::shared_ptr<Window> pWnd;
 };
